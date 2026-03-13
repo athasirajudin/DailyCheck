@@ -1,0 +1,37 @@
+== Info:   Trying 127.0.0.1:8000...
+== Info: Established connection to 127.0.0.1 (127.0.0.1 port 8000) from 127.0.0.1 port 60724 
+== Info: using HTTP/1.x
+=> Send header, 145 bytes (0x91)
+0000: POST /api/auth/login HTTP/1.1
+001f: Host: 127.0.0.1:8000
+0035: User-Agent: curl/8.16.0
+004e: Accept: */*
+005b: Content-Type: application/json
+007b: Content-Length: 50
+008f: 
+=> Send data, 50 bytes (0x32)
+0000: {email:intern@lemhannas.go.id,password:Intern123!}
+== Info: upload completely sent off: 50 bytes
+<= Recv header, 26 bytes (0x1a)
+0000: HTTP/1.1 400 Bad Request
+<= Recv header, 22 bytes (0x16)
+0000: Host: 127.0.0.1:8000
+<= Recv header, 19 bytes (0x13)
+0000: Connection: close
+<= Recv header, 26 bytes (0x1a)
+0000: X-Powered-By: PHP/8.2.29
+<= Recv header, 34 bytes (0x22)
+0000: Cache-Control: no-cache, private
+<= Recv header, 37 bytes (0x25)
+0000: Date: Wed, 11 Feb 2026 00:12:43 GMT
+<= Recv header, 32 bytes (0x20)
+0000: Content-Type: application/json
+<= Recv header, 32 bytes (0x20)
+0000: Access-Control-Allow-Origin: *
+<= Recv header, 2 bytes (0x2)
+0000: 
+<= Recv data, 75 bytes (0x4b)
+0000: {"ok":false,"error":{"code":"BAD_JSON","message":"Body JSON tida
+0040: k valid."}}
+<= Recv data, 0 bytes (0x0)
+== Info: shutting down connection #0

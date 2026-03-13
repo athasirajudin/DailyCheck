@@ -1,0 +1,11 @@
+END USER LICENSE AGREEMENT (EULA)
+
+DailyCheck - Absensi PKL Lemhannas
+
+By installing or using this software, you agree to use it for legitimate
+attendance management purposes and comply with applicable policies.
+
+The software is provided "as is", without warranty of any kind.
+
+Copyright (C) 2026 Lemhannas RI.
+

@@ -1,0 +1,11 @@
+backend_laravel/vendor
+node_modules
+flutter_application_1/build
+backend_laravel/storage/logs
+backend_laravel/storage/framework/cache
+backend_laravel/storage/framework/sessions
+backend_laravel/storage/framework/views
+.git
+.gitignore
+.vscode
+.idea
