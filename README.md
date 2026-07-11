@@ -1,4 +1,9 @@
-# Absensi PKL/Magang Lemhannas
+DailyCheck - Smart Internship Attendance & Monitoring System
+DailyCheck merupakan sistem absensi dan monitoring kegiatan PKL/Magang berbasis Flutter dan Laravel yang dirancang untuk memastikan setiap proses kehadiran dilakukan secara real-time, terverifikasi, dan sesuai dengan lokasi serta jadwal kerja yang telah ditentukan.
+Berbeda dengan sistem absensi konvensional yang hanya mencatat waktu kehadiran, DailyCheck melakukan serangkaian validasi sebelum pengguna dapat melakukan absensi. Setiap proses Check-in maupun Check-out akan memverifikasi beberapa kondisi secara bersamaan, meliputi lokasi pengguna melalui GPS, jarak terhadap area geofence unit kerja, jadwal kerja yang berlaku, serta status akun pengguna.
+Sistem hanya akan mengaktifkan tombol absensi apabila seluruh persyaratan telah terpenuhi. Apabila pengguna berada di luar radius geofence, GPS tidak aktif, lokasi belum diperoleh, atau waktu absensi belum memasuki jam kerja yang ditentukan, maka proses absensi akan ditolak secara otomatis.
+Selain mencatat waktu kehadiran, DailyCheck juga menyimpan informasi pendukung seperti koordinat GPS, jarak pengguna terhadap titik geofence, perangkat yang digunakan, hingga riwayat perubahan data sebagai Audit Log. Dengan demikian seluruh aktivitas absensi dapat ditelusuri kembali apabila diperlukan.
+___________________________________________
 
 Proyek absensi PKL/magang untuk kantor **Lemhannas** dengan konsep:
 - Check-in / check-out memakai tombol + validasi GPS & radius geofence (tanpa QR)
@@ -6,35 +11,9 @@ Proyek absensi PKL/magang untuk kantor **Lemhannas** dengan konsep:
 - Approval izin/sakit + override status oleh pembimbing (audit log)
 - Admin settings, geofence unit, rekap/export
 
-Arsitektur Flutter: MVVM (ChangeNotifier).
-
-## Akses Semua HP via ngrok (Laravel API)
-
-Gunakan backend Laravel di folder `backend_laravel`:
-
-1. Jalankan API Laravel:
-   - `cd backend_laravel`
-   - `php artisan serve --host 0.0.0.0 --port 8000`
-2. Di terminal lain, buka tunnel ngrok:
-   - `ngrok http 8000`
-3. Ambil URL HTTPS ngrok, misalnya:
-   - `https://abcd-1234.ngrok-free.app`
-4. Jalankan Flutter dengan base URL ngrok:
-   - `flutter run --dart-define=API_BASE_URL=https://abcd-1234.ngrok-free.app`
+->
 
 Catatan:
-- Endpoint Flutter sudah pakai prefix `/api/...`, jadi `API_BASE_URL` cukup domain saja (tanpa `/api`).
-- URL ngrok berubah setiap start; sekarang bisa diubah langsung dari halaman login lewat tombol `Ubah URL API (ngrok)`.
-- Di `backend_laravel`, endpoint inti (`auth/login`, `me`, `units`, `public/units`, `register/request`) sudah native Laravel.
-- Endpoint lain sementara lewat bridge ke logic lama `backend/src/routes.php` agar semua fitur tetap jalan saat migrasi bertahap.
-- Jika muncul `Response server bukan JSON`, biasanya URL ngrok salah/tunnel mati/URL base memakai path yang keliru. Gunakan format `https://xxxx.ngrok-free.app` (tanpa `/api` dan tanpa trailing slash).
-
-## 1) Setup Backend (Laragon)
-
-1. Jalankan Laragon: **Apache + MySQL**
-2. Buat database: `absensi_pkl`
-3. Import schema: `backend/sql/schema.sql`
-4. Import seed (opsional, untuk akun demo): `backend/sql/seed.sql`
 
 Default akun demo:
 - Admin: `admin@lemhannas.go.id` / `Admin123!`
@@ -42,40 +21,111 @@ Default akun demo:
 - Intern: `intern@lemhannas.go.id` / `Intern123!`
 
 Catatan backend legacy: lihat `backend/README.md`.
+___________________________________________
 
-## 2) Setup Flutter
+## 1) Validasi Lokasi
 
-1. Jalankan `flutter pub get`
-2. Pastikan device punya akses ke base URL API.
+Saat halaman absensi dibuka, aplikasi akan mengambil lokasi pengguna menggunakan GPS perangkat.
+Sistem kemudian menghitung jarak antara posisi pengguna dengan titik geofence unit kerja menggunakan perhitungan koordinat.
+Apabila pengguna berada di luar radius yang telah ditentukan, tombol absensi akan tetap dinonaktifkan.
+___________________________________________
 
-Base URL API default ada di `lib/main.dart`:
-- Host/Windows (Laravel local): `http://127.0.0.1:8000`
+## 2) Autentikasi Pengguna
 
-Untuk Android Emulator, gunakan:
-- `http://10.0.2.2:8000`
+Setiap pengguna melakukan login menggunakan akun yang telah diberikan.
+Hak akses sistem dibedakan berdasarkan role, yaitu:
+Administrator
+Pembimbing
+Peserta PKL/Magang
+___________________________________________
 
-Jalankan app dengan override base URL:
-- `flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8000`
+## 3) Validasi Waktu
 
-Konfigurasi login admin/pembimbing:
-- Ubah `backend_laravel/.env` pada `ADMIN_LOGIN_PIN=...` untuk mengganti PIN verifikasi login admin.
-- `ADMIN_ACCESS_TTL_SECONDS` mengatur masa berlaku tiket verifikasi PIN sebelum login admin.
-- `ADMIN_ACCESS_CACHE_STORE=file` disarankan agar verifikasi PIN admin tidak bergantung pada tabel cache database.
-- Jika Anda mengubah nilai env Laravel, jalankan `php artisan config:clear`.
+Selain lokasi, sistem juga melakukan validasi terhadap jadwal kerja.
+Administrator menentukan:
+Jam mulai kerja
+Jam pulang
+Radius geofence
+Check-in hanya dapat dilakukan pada rentang jam masuk, sedangkan Check-out hanya tersedia setelah memenuhi ketentuan jam pulang.
+___________________________________________
 
-## 3) Alur cepat (End-to-End)
+## 4) Proses Check-in
 
-1. Admin set geofence unit + jam mulai/pulang di menu Settings & Unit.
-2. Intern login → buka “Check-in / Check-out” → aplikasi cek GPS & radius → tombol aktif saat dalam radius + jam yang diizinkan → tap untuk hadir/pulang.
-3. Pembimbing → Approve izin/sakit & override status jika perlu.
+Ketika seluruh validasi berhasil, pengguna dapat melakukan Check-in.
+Data yang disimpan meliputi:
+Tanggal
+Waktu Check-in
+Koordinat GPS
+Radius terhadap geofence
+Unit kerja
+Status kehadiran
+Semua data langsung dikirim ke server Laravel dan tersimpan di database.
+___________________________________________
 
-## 4) Self Register (Request)
+## 7) Monitoring Kehadiran
+
+Administrator dan Pembimbing dapat memonitor kehadiran peserta secara real-time melalui dashboard.
+Informasi yang ditampilkan meliputi:
+Status hadir
+Sedang bekerja
+Belum hadir
+Izin
+Sakit
+Alpha
+Sudah Check-out
+Data diperbarui secara berkala menggunakan mekanisme polling.
+___________________________________________
+
+## 8) Pengajuan Izin dan Sakit
+
+Apabila peserta tidak dapat hadir, mereka dapat mengajukan izin atau sakit melalui aplikasi.
+Permohonan akan diteruskan kepada Pembimbing untuk dilakukan proses persetujuan maupun penolakan.
+Seluruh riwayat keputusan tersimpan dalam sistem sehingga dapat ditelusuri kembali.
+___________________________________________
+
+## 9) Override Kehadiran
+
+Dalam kondisi tertentu, Pembimbing dapat mengubah status kehadiran peserta.
+Misalnya apabila terjadi kendala GPS, gangguan jaringan, atau alasan administratif lainnya.
+Setiap perubahan tidak langsung mengganti data begitu saja, tetapi dicatat ke dalam Audit Log sehingga histori perubahan tetap tersimpan.
+___________________________________________
+
+## 10) Rekapitulasi
+
+Seluruh data absensi dapat direkap berdasarkan:
+Periode
+Unit kerja
+Peserta
+Status kehadiran
+Administrator juga dapat mengekspor laporan sebagai dokumentasi maupun kebutuhan administrasi.
+___________________________________________
+
+## 11) Self Register (Request)
 
 Di halaman Login, klik `Daftar PKL (Request)`:
 - Status awal `PENDING`
 - Admin approve di menu `Approval Pendaftaran`
 - Sistem membuat akun intern + password sementara (ditampilkan ke admin)
  - Data asal sekolah disimpan untuk admin & pembimbing
+ - 
+___________________________________________
+
+## 12) Alur cepat (End-to-End)
+
+1. Admin set geofence unit + jam mulai/pulang di menu Settings & Unit.
+2. Intern login → buka “Check-in / Check-out” → aplikasi cek GPS & radius → tombol aktif saat dalam radius + jam yang diizinkan → tap untuk hadir/pulang.
+3. Pembimbing → Approve izin/sakit & override status jika perlu.
+___________________________________________
+
+## Teknologi yang Digunakan
+
+Flutter sebagai aplikasi mobile lintas platform.
+Laravel sebagai REST API dan backend utama.
+MySQL sebagai basis data.
+GPS & Geofence untuk validasi lokasi absensi.
+Polling Realtime untuk memperbarui data dashboard secara berkala.
+Nginx sebagai web server pada proses deployment.
+
 
 ## Catatan
 
