@@ -15,6 +15,9 @@ Dirancang untuk meminimalkan kecurangan absensi sekaligus memberikan administrat
 
 </div>
 
+<img width="1080" height="2400" alt="1000060627" src="https://github.com/user-attachments/assets/08e75428-ddb5-4989-93fe-d7ebb4221941" />
+
+
 ---
 
 # Ringkasan
