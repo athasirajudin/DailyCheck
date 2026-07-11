@@ -6,13 +6,16 @@ Sistem hanya akan mengaktifkan tombol absensi apabila seluruh persyaratan telah 
 Selain mencatat waktu kehadiran, DailyCheck juga menyimpan informasi pendukung seperti koordinat GPS, jarak pengguna terhadap titik geofence, perangkat yang digunakan, hingga riwayat perubahan data sebagai Audit Log. Dengan demikian seluruh aktivitas absensi dapat ditelusuri kembali apabila diperlukan.
 ___________________________________________
 
+<img width="1080" height="2400" alt="1000060623" src="https://github.com/user-attachments/assets/2f30906b-30f2-40b1-8388-ceb386269742" />
+
+## _____________________________________ ##
+
 Proyek absensi PKL/magang untuk kantor **Lemhannas** dengan konsep:
 - Check-in / check-out memakai tombol + validasi GPS & radius geofence (tanpa QR)
 - Tombol aktif hanya di jam kerja (jam mulai–jam pulang) & saat device berada di dalam radius
 - Approval izin/sakit + override status oleh pembimbing (audit log)
 - Admin settings, geofence unit, rekap/export
 
-->
 
 Catatan:
 
