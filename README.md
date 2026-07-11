@@ -63,7 +63,7 @@ Status kehadiran
 Semua data langsung dikirim ke server Laravel dan tersimpan di database.
 ___________________________________________
 
-## 7) Monitoring Kehadiran
+## 5) Monitoring Kehadiran
 
 Administrator dan Pembimbing dapat memonitor kehadiran peserta secara real-time melalui dashboard.
 Informasi yang ditampilkan meliputi:
@@ -77,21 +77,21 @@ Sudah Check-out
 Data diperbarui secara berkala menggunakan mekanisme polling.
 ___________________________________________
 
-## 8) Pengajuan Izin dan Sakit
+## 6) Pengajuan Izin dan Sakit
 
 Apabila peserta tidak dapat hadir, mereka dapat mengajukan izin atau sakit melalui aplikasi.
 Permohonan akan diteruskan kepada Pembimbing untuk dilakukan proses persetujuan maupun penolakan.
 Seluruh riwayat keputusan tersimpan dalam sistem sehingga dapat ditelusuri kembali.
 ___________________________________________
 
-## 9) Override Kehadiran
+## 7) Override Kehadiran
 
 Dalam kondisi tertentu, Pembimbing dapat mengubah status kehadiran peserta.
 Misalnya apabila terjadi kendala GPS, gangguan jaringan, atau alasan administratif lainnya.
 Setiap perubahan tidak langsung mengganti data begitu saja, tetapi dicatat ke dalam Audit Log sehingga histori perubahan tetap tersimpan.
 ___________________________________________
 
-## 10) Rekapitulasi
+## 8) Rekapitulasi
 
 Seluruh data absensi dapat direkap berdasarkan:
 Periode
@@ -101,7 +101,7 @@ Status kehadiran
 Administrator juga dapat mengekspor laporan sebagai dokumentasi maupun kebutuhan administrasi.
 ___________________________________________
 
-## 11) Self Register (Request)
+## 9) Self Register (Request)
 
 Di halaman Login, klik `Daftar PKL (Request)`:
 - Status awal `PENDING`
@@ -111,7 +111,7 @@ Di halaman Login, klik `Daftar PKL (Request)`:
  - 
 ___________________________________________
 
-## 12) Alur cepat (End-to-End)
+## 10) Alur cepat (End-to-End)
 
 1. Admin set geofence unit + jam mulai/pulang di menu Settings & Unit.
 2. Intern login → buka “Check-in / Check-out” → aplikasi cek GPS & radius → tombol aktif saat dalam radius + jam yang diizinkan → tap untuk hadir/pulang.
