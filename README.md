@@ -1,140 +1,334 @@
-## DailyCheck - Smart Internship Attendance & Monitoring System
+<div align="center">
 
-DailyCheck merupakan sistem absensi dan monitoring kegiatan PKL/Magang berbasis Flutter dan Laravel yang dirancang untuk memastikan setiap proses kehadiran dilakukan secara real-time, terverifikasi, dan sesuai dengan lokasi serta jadwal kerja yang telah ditentukan.
+# DailyCheck
 
-Berbeda dengan sistem absensi konvensional yang hanya mencatat waktu kehadiran, DailyCheck melakukan serangkaian validasi sebelum pengguna dapat melakukan absensi. Setiap proses Check-in maupun Check-out akan memverifikasi beberapa kondisi secara bersamaan, meliputi lokasi pengguna melalui GPS, jarak terhadap area geofence unit kerja, jadwal kerja yang berlaku, serta status akun pengguna.
+### Sistem Cerdas Absensi dan Monitoring Magang
 
-Sistem hanya akan mengaktifkan tombol absensi apabila seluruh persyaratan telah terpenuhi. Apabila pengguna berada di luar radius geofence, GPS tidak aktif, lokasi belum diperoleh, atau waktu absensi belum memasuki jam kerja yang ditentukan, maka proses absensi akan ditolak secara otomatis.
+DailyCheck adalah sistem absensi dan monitoring magang berbasis lokasi yang dibangun dengan **Flutter** dan **Laravel**. Aplikasi ini memvalidasi setiap catatan kehadiran melalui **Pelacakan GPS**, **Verifikasi Geofence**, **Validasi Jadwal Kerja**, dan **Alur Persetujuan Berbasis Peran** untuk memastikan absensi yang akurat, transparan, dan akuntabel.
 
-Selain mencatat waktu kehadiran, DailyCheck juga menyimpan informasi pendukung seperti koordinat GPS, jarak pengguna terhadap titik geofence, perangkat yang digunakan, hingga riwayat perubahan data sebagai Audit Log. Dengan demikian seluruh aktivitas absensi dapat ditelusuri kembali apabila diperlukan.
-___________________________________________
+Dirancang untuk meminimalkan kecurangan absensi sekaligus memberikan administrator dan pembimbing kemampuan monitoring real-time dan manajemen absensi yang terpusat.
 
-<img width="1080" height="2400" alt="1000060623" src="https://github.com/user-attachments/assets/2f30906b-30f2-40b1-8388-ceb386269742" />
+![Flutter](https://img.shields.io/badge/Flutter-3.x-blue?logo=flutter)
+![Laravel](https://img.shields.io/badge/Laravel-12-red?logo=laravel)
+![MySQL](https://img.shields.io/badge/MySQL-Database-blue?logo=mysql)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-## _____________________________________ ##
+</div>
 
-Proyek absensi PKL/magang untuk kantor **Lemhannas** dengan konsep:
-- Check-in / check-out memakai tombol + validasi GPS & radius geofence (tanpa QR)
-- Tombol aktif hanya di jam kerja (jam mulai–jam pulang) & saat device berada di dalam radius
-- Approval izin/sakit + override status oleh pembimbing (audit log)
-- Admin settings, geofence unit, rekap/export
+---
 
+# Ringkasan
 
-Catatan:
+DailyCheck adalah sistem absensi digital dan monitoring magang yang dikembangkan untuk meningkatkan efisiensi dan keandalan manajemen absensi magang.
 
-Default akun demo:
-- Admin: `admin@lemhannas.go.id` / `Admin123!`
-- Pembimbing: `mentor@lemhannas.go.id` / `Mentor123!`
-- Intern: `intern@lemhannas.go.id` / `Intern123!`
+Berbeda dengan sistem absensi konvensional yang hanya mencatat cap waktu, DailyCheck melakukan berbagai proses validasi sebelum mengizinkan pengguna melakukan check-in atau check-out. Setiap aktivitas absensi diverifikasi menggunakan lokasi GPS peserta saat itu, area geofence yang ditetapkan, jadwal kerja, dan hak akses sistem.
 
-Catatan backend legacy: lihat `backend/README.md`.
-___________________________________________
+Sistem ini juga menyediakan perangkat administrasi terpadu untuk manajemen peserta, monitoring absensi, persetujuan izin, koreksi absensi, pelaporan, dan pencatatan audit. Dengan menggabungkan seluruh komponen ini dalam satu platform, DailyCheck membantu organisasi menjaga keakuratan catatan absensi sekaligus menyederhanakan pengawasan magang.
 
-## 1) Validasi Lokasi
+---
 
-Saat halaman absensi dibuka, aplikasi akan mengambil lokasi pengguna menggunakan GPS perangkat.
-Sistem kemudian menghitung jarak antara posisi pengguna dengan titik geofence unit kerja menggunakan perhitungan koordinat.
-Apabila pengguna berada di luar radius yang telah ditentukan, tombol absensi akan tetap dinonaktifkan.
-___________________________________________
+# Latar Belakang
 
-## 2) Autentikasi Pengguna
+Banyak organisasi masih mengelola absensi magang dengan metode manual atau semi-digital seperti:
 
-Setiap pengguna melakukan login menggunakan akun yang telah diberikan.
-Hak akses sistem dibedakan berdasarkan role, yaitu:
-Administrator
-Pembimbing
-Peserta PKL/Magang
-___________________________________________
+- Lembar absensi kertas
+- Pemindaian kode QR
+- Google Forms
+- Aplikasi pesan instan
 
-## 3) Validasi Waktu
+Meskipun pendekatan ini mudah diterapkan, cara-cara tersebut sering menimbulkan berbagai masalah operasional, di antaranya:
 
-Selain lokasi, sistem juga melakukan validasi terhadap jadwal kerja.
-Administrator menentukan:
-Jam mulai kerja
-Jam pulang
-Radius geofence
-Check-in hanya dapat dilakukan pada rentang jam masuk, sedangkan Check-out hanya tersedia setelah memenuhi ketentuan jam pulang.
-___________________________________________
+- Kecurangan absensi
+- Absensi jarak jauh di luar tempat kerja
+- Manipulasi waktu absensi
+- Kesulitan dalam memantau peserta
+- Pelaporan absensi yang memakan waktu
 
-## 4) Proses Check-in
+DailyCheck dikembangkan untuk mengatasi tantangan tersebut melalui sistem absensi berbasis lokasi yang didukung validasi otomatis dan monitoring terpusat.
 
-Ketika seluruh validasi berhasil, pengguna dapat melakukan Check-in.
-Data yang disimpan meliputi:
-Tanggal
-Waktu Check-in
-Koordinat GPS
-Radius terhadap geofence
-Unit kerja
-Status kehadiran
-Semua data langsung dikirim ke server Laravel dan tersimpan di database.
-___________________________________________
+---
 
-## 5) Monitoring Kehadiran
+# Tujuan
 
-Administrator dan Pembimbing dapat memonitor kehadiran peserta secara real-time melalui dashboard.
-Informasi yang ditampilkan meliputi:
-Status hadir
-Sedang bekerja
-Belum hadir
-Izin
-Sakit
-Alpha
-Sudah Check-out
-Data diperbarui secara berkala menggunakan mekanisme polling.
-___________________________________________
+Tujuan utama DailyCheck adalah:
 
-## 6) Pengajuan Izin dan Sakit
+- Memastikan absensi hanya dapat dilakukan di lokasi yang sah.
+- Mencegah manipulasi absensi melalui validasi GPS dan geofence.
+- Memverifikasi absensi sesuai jadwal kerja yang telah ditentukan.
+- Menyederhanakan administrasi absensi magang.
+- Menyediakan monitoring absensi secara real-time.
+- Menjaga riwayat absensi secara lengkap melalui pencatatan audit.
+- Menghasilkan laporan absensi yang akurat.
 
-Apabila peserta tidak dapat hadir, mereka dapat mengajukan izin atau sakit melalui aplikasi.
-Permohonan akan diteruskan kepada Pembimbing untuk dilakukan proses persetujuan maupun penolakan.
-Seluruh riwayat keputusan tersimpan dalam sistem sehingga dapat ditelusuri kembali.
-___________________________________________
+---
 
-## 7) Override Kehadiran
+# Fitur Utama
 
-Dalam kondisi tertentu, Pembimbing dapat mengubah status kehadiran peserta.
-Misalnya apabila terjadi kendala GPS, gangguan jaringan, atau alasan administratif lainnya.
-Setiap perubahan tidak langsung mengganti data begitu saja, tetapi dicatat ke dalam Audit Log sehingga histori perubahan tetap tersimpan.
-___________________________________________
+- Absensi berbasis GPS
+- Validasi geofence
+- Validasi jadwal kerja
+- Check-in dan Check-out
+- Pengajuan izin dan sakit
+- Alur persetujuan absensi
+- Koreksi absensi (override)
+- Audit log
+- Monitoring absensi real-time
+- Pelaporan absensi
+- Manajemen pengguna
+- Manajemen unit kerja
 
-## 8) Rekapitulasi
+---
 
-Seluruh data absensi dapat direkap berdasarkan:
-Periode
-Unit kerja
-Peserta
-Status kehadiran
-Administrator juga dapat mengekspor laporan sebagai dokumentasi maupun kebutuhan administrasi.
-___________________________________________
+# Alur Sistem
 
-## 9) Self Register (Request)
+DailyCheck memvalidasi beberapa kondisi sebelum mengizinkan peserta mencatat absensi.
 
-Di halaman Login, klik `Daftar PKL (Request)`:
-- Status awal `PENDING`
-- Admin approve di menu `Approval Pendaftaran`
-- Sistem membuat akun intern + password sementara (ditampilkan ke admin)
- - Data asal sekolah disimpan untuk admin & pembimbing
- - 
-___________________________________________
+Alur keseluruhan digambarkan sebagai berikut.
 
-## 10) Alur cepat (End-to-End)
+```mermaid
+flowchart TD
 
-1. Admin set geofence unit + jam mulai/pulang di menu Settings & Unit.
-2. Intern login → buka “Check-in / Check-out” → aplikasi cek GPS & radius → tombol aktif saat dalam radius + jam yang diizinkan → tap untuk hadir/pulang.
-3. Pembimbing → Approve izin/sakit & override status jika perlu.
-___________________________________________
+A[Login Pengguna]
+B[Buka Halaman Absensi]
+C[Validasi Izin GPS]
+D[Ambil Lokasi Saat Ini]
+E[Ambil Konfigurasi Geofence]
+F[Hitung Jarak]
+G{Di Dalam Geofence?}
+H{Jam Kerja?}
+I[Aktifkan Check-In]
+J[Kirim Absensi]
+K[Simpan Data Absensi]
+L[Perbarui Dashboard]
 
-## Teknologi yang Digunakan
+A --> B
+B --> C
+C --> D
+D --> E
+E --> F
+F --> G
+G -- Tidak --> D
+G -- Ya --> H
+H -- Tidak --> B
+H -- Ya --> I
+I --> J
+J --> K
+K --> L
+```
 
-Flutter sebagai aplikasi mobile lintas platform.
-Laravel sebagai REST API dan backend utama.
-MySQL sebagai basis data.
-GPS & Geofence untuk validasi lokasi absensi.
-Polling Realtime untuk memperbarui data dashboard secara berkala.
-Nginx sebagai web server pada proses deployment.
+---
 
+# Proses Validasi Absensi
 
-## Catatan
+Sebelum peserta diizinkan melakukan Check-in atau Check-out, sistem memvalidasi beberapa kondisi berikut.
 
-- Realtime dibuat via polling (interval beberapa detik) untuk dashboard/status/list.
-- Endpoint `POST /api/system/finalize-day` disiapkan untuk semi-auto ALPA + checkout missing untuk tanggal yang sudah lewat (sebaiknya dipanggil scheduler). 
+## Autentikasi
+
+Setiap pengguna harus melakukan autentikasi menggunakan akun yang valid.
+
+Peran pengguna yang terautentikasi menentukan fitur dan sumber daya apa saja yang dapat diakses dalam aplikasi.
+
+Peran yang didukung meliputi:
+
+- Administrator
+- Pembimbing
+- Peserta Magang
+
+---
+
+## Validasi GPS
+
+Aplikasi memverifikasi bahwa:
+
+- Layanan lokasi telah diaktifkan.
+- Izin lokasi telah diberikan.
+- Posisi GPS saat ini dapat diambil dengan berhasil.
+
+Absensi tidak dapat dilanjutkan apabila salah satu syarat di atas tidak terpenuhi.
+
+---
+
+## Validasi Geofence
+
+Setelah lokasi saat ini diperoleh, aplikasi menghitung jarak antara posisi peserta dan area geofence tempat kerja yang ditetapkan.
+
+Jika jarak yang dihitung melebihi radius yang dikonfigurasi, aksi absensi tetap tidak dapat digunakan.
+
+---
+
+## Validasi Jadwal Kerja
+
+Absensi juga divalidasi berdasarkan jadwal kerja yang dikonfigurasi.
+
+Sistem memverifikasi:
+
+- Hari kerja
+- Jadwal check-in
+- Jadwal check-out
+
+Absensi hanya diizinkan dalam periode absensi yang telah dikonfigurasi.
+
+---
+
+## Pencatatan Absensi
+
+Ketika seluruh proses validasi berhasil, catatan absensi dikirim ke backend.
+
+Informasi yang dicatat meliputi:
+
+- Waktu check-in
+- Waktu check-out
+- Koordinat GPS
+- Jarak geofence
+- Status kehadiran
+- Unit kerja yang ditetapkan
+- Informasi perangkat
+- Cap waktu
+
+Backend melakukan validasi tambahan sebelum menyimpan data ke dalam basis data.
+
+---
+
+## Sinkronisasi Dashboard
+
+Informasi absensi disinkronkan secara berkala menggunakan polling untuk memastikan administrator dan pembimbing selalu menerima status peserta terbaru.
+
+---
+
+## Alur Pengajuan Izin
+
+Peserta dapat mengajukan izin atau izin sakit langsung melalui aplikasi.
+
+Setiap pengajuan ditinjau oleh pembimbing yang ditugaskan sebelum disetujui atau ditolak.
+
+Riwayat persetujuan lengkap disimpan untuk keperluan referensi di kemudian hari.
+
+---
+
+## Koreksi Absensi (Override)
+
+Pembimbing dapat memperbarui catatan absensi dalam keadaan tertentu, seperti kegagalan GPS, gangguan koneksi, atau koreksi administratif.
+
+Setiap perubahan dicatat dalam Audit Log untuk menjaga akuntabilitas dan riwayat absensi yang lengkap.
+
+---
+
+# Peran Pengguna
+
+## Administrator
+
+Bertanggung jawab atas pengelolaan sistem secara keseluruhan.
+
+Kemampuan meliputi:
+
+- Manajemen pengguna
+- Manajemen unit kerja
+- Konfigurasi geofence
+- Konfigurasi jadwal kerja
+- Persetujuan pendaftaran
+- Monitoring absensi
+- Pembuatan laporan
+
+---
+
+## Pembimbing
+
+Bertanggung jawab mengawasi peserta magang.
+
+Kemampuan meliputi:
+
+- Monitoring absensi
+- Persetujuan izin
+- Persetujuan izin sakit
+- Koreksi absensi
+
+---
+
+## Peserta Magang
+
+Bertanggung jawab mencatat absensi harian dan mengelola informasi absensi pribadi.
+
+Kemampuan meliputi:
+
+- Check-in
+- Check-out
+- Riwayat absensi
+- Pengajuan izin
+- Pengajuan izin sakit
+- Manajemen profil
+
+---
+
+# Arsitektur Sistem
+
+```text
+               Aplikasi Mobile Flutter
+                         │
+                         │ HTTPS REST API
+                         ▼
+                Layanan Backend Laravel
+                         │
+                 Lapisan Logika Bisnis
+                         │
+                         ▼
+                   Basis Data MySQL
+```
+
+---
+
+# Struktur Proyek
+
+```text
+DailyCheck
+│
+├── lib/
+│   Kode sumber aplikasi Flutter
+│
+├── backend_laravel/
+│   REST API Laravel
+│
+├── backend/
+│   Layanan backend lama (legacy)
+│
+├── deploy/
+│   Konfigurasi deployment
+│
+├── android/
+├── ios/
+├── linux/
+├── macos/
+└── windows/
+```
+
+---
+
+# Teknologi yang Digunakan
+
+| Lapisan | Teknologi |
+|--------|------------|
+| Aplikasi Mobile | Flutter |
+| Backend | Laravel |
+| Basis Data | MySQL |
+| Arsitektur | MVVM |
+| Komunikasi | REST API |
+| Deployment | Nginx |
+
+---
+
+# Pengembangan ke Depan
+
+Peningkatan berikut direncanakan untuk rilis mendatang:
+
+- Pengenalan wajah untuk verifikasi absensi (jika di perlukan)
+- Layanan push notification
+- Monitoring lokasi secara live
+- Dashboard administrasi berbasis web
+- Analitik absensi
+- Peta panas (heatmap) absensi
+- Manajemen pengunjung (visitor management)
+
+---
+
+# CATATAN
+
+DailyCheck dikembangkan sebagai sistem absensi dan monitoring magang untuk mendukung transformasi digital dalam manajemen absensi melalui validasi lokasi yang akurat, alur persetujuan yang terstruktur, dan monitoring yang terpusat.
