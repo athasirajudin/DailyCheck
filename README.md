@@ -1,4 +1,5 @@
-DailyCheck - Smart Internship Attendance & Monitoring System
+## DailyCheck - Smart Internship Attendance & Monitoring System
+
 DailyCheck merupakan sistem absensi dan monitoring kegiatan PKL/Magang berbasis Flutter dan Laravel yang dirancang untuk memastikan setiap proses kehadiran dilakukan secara real-time, terverifikasi, dan sesuai dengan lokasi serta jadwal kerja yang telah ditentukan.
 Berbeda dengan sistem absensi konvensional yang hanya mencatat waktu kehadiran, DailyCheck melakukan serangkaian validasi sebelum pengguna dapat melakukan absensi. Setiap proses Check-in maupun Check-out akan memverifikasi beberapa kondisi secara bersamaan, meliputi lokasi pengguna melalui GPS, jarak terhadap area geofence unit kerja, jadwal kerja yang berlaku, serta status akun pengguna.
 Sistem hanya akan mengaktifkan tombol absensi apabila seluruh persyaratan telah terpenuhi. Apabila pengguna berada di luar radius geofence, GPS tidak aktif, lokasi belum diperoleh, atau waktu absensi belum memasuki jam kerja yang ditentukan, maka proses absensi akan ditolak secara otomatis.
